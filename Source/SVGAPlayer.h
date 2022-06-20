@@ -51,5 +51,6 @@ typedef void(^SVGAPlayerDynamicDrawingBlock)(CALayer *contentLayer, NSInteger fr
 - (void)setDrawingBlock:(SVGAPlayerDynamicDrawingBlock)drawingBlock forKey:(NSString *)aKey;
 - (void)setHidden:(BOOL)hidden forKey:(NSString *)aKey;
 - (void)clearDynamicObjects;
+- (void)setAttributedText:(NSAttributedString *)attributedText forKey:(NSString *)aKey gradientColors:(NSArray <UIColor *>*)gradientColors;
 
 @end

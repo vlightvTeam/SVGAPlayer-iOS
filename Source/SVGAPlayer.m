@@ -32,7 +32,10 @@
 @property (nonatomic, assign) BOOL forwardAnimating;
 @property (nonatomic, assign) BOOL reversing;
 
-@end 
+/// 文字渐变
+@property (nonatomic, strong) NSMutableDictionary *gradientDict;
+
+@end
 
 @implementation SVGAPlayer
 
@@ -60,6 +63,7 @@
 - (void)initPlayer {
     self.contentMode = UIViewContentModeTop;
     self.clearsAfterStop = YES;
+    self.gradientDict = [NSMutableDictionary dictionaryWithCapacity:0];
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
@@ -101,7 +105,7 @@
         NSLog(@"videoItem FPS could not be 0！");
         return;
     }
-    
+
     self.currentRange = range;
     self.reversing = reverse;
     if (reverse) {
@@ -190,7 +194,7 @@
     self.drawLayer.masksToBounds = true;
     NSMutableDictionary *tempHostLayers = [NSMutableDictionary dictionary];
     NSMutableArray *tempContentLayers = [NSMutableArray array];
-    
+
     [self.videoItem.sprites enumerateObjectsUsingBlock:^(SVGAVideoSpriteEntity * _Nonnull sprite, NSUInteger idx, BOOL * _Nonnull stop) {
         UIImage *bitmap;
         if (sprite.imageKey != nil) {
@@ -231,7 +235,20 @@
                 textLayer.contentsScale = [[UIScreen mainScreen] scale];
                 [textLayer setString:self.dynamicTexts[sprite.imageKey]];
                 textLayer.frame = CGRectMake(0, 0, size.width, size.height);
-                [contentLayer addSublayer:textLayer];
+                if (self.gradientDict.count > 0) {
+                    if ([sprite.imageKey isEqualToString:@"img_558"]) {
+                        textLayer.frame = CGRectMake(0, 8, size.width, size.height);
+                    }
+                    NSArray * gradientColors = self.gradientDict[sprite.imageKey];
+                    CAGradientLayer *gradient = [CAGradientLayer layer];
+                    gradient.frame = textLayer.frame;
+                    gradient.colors = gradientColors;
+                    gradient.mask = textLayer;
+                    [contentLayer addSublayer:gradient];
+                } else {
+                    [contentLayer addSublayer:textLayer];
+                }
+
                 contentLayer.textLayer = textLayer;
                 [contentLayer resetTextLayerProperties:text];
             }
@@ -245,7 +262,7 @@
         }
     }];
     self.contentLayers = tempContentLayers;
-    
+
     [self.layer addSublayer:self.drawLayer];
     NSMutableArray *audioLayers = [NSMutableArray array];
     [self.videoItem.audios enumerateObjectsUsingBlock:^(SVGAAudioEntity * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -483,6 +500,11 @@
             textLayer.frame = CGRectMake(0, 0, size.width, size.height);
         }
     }
+}
+
+- (void)setAttributedText:(NSAttributedString *)attributedText forKey:(NSString *)aKey gradientColors:(NSArray <UIColor *>*)gradientColors{
+    [self.gradientDict setValue:gradientColors forKey:aKey];
+    [self setAttributedText:attributedText forKey:aKey];
 }
 
 - (void)setDrawingBlock:(SVGAPlayerDynamicDrawingBlock)drawingBlock forKey:(NSString *)aKey {
