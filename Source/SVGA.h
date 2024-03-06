@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "SVGAParser.h"
 #import "SVGAPlayer.h"
-#import "SVGAImageView.h"
 #import "SVGAVideoEntity.h"
 #import "SVGAExporter.h"
 
