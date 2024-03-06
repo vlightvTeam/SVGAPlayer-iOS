@@ -10,6 +10,7 @@
 
 @interface SVGAImageView : SVGAPlayer
 
+@property (nonatomic, assign) BOOL enabledMemoryCache;
 @property (nonatomic, assign) IBInspectable BOOL autoPlay;
 @property (nonatomic, strong) IBInspectable NSString *imageName;
 

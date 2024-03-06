@@ -8,13 +8,14 @@
 
 #import "ViewController.h"
 #import "SVGA.h"
-
+#import "SVGAPlayer+LoadData.h"
 @interface ViewController ()<SVGAPlayerDelegate>
 
-@property (weak, nonatomic) IBOutlet SVGAPlayer *aPlayer;
+@property (weak, nonatomic) IBOutlet SVGAImageView *aPlayer;
 @property (weak, nonatomic) IBOutlet UISlider *aSlider;
 @property (weak, nonatomic) IBOutlet UIButton *onBeginButton;
 
+@property (strong, nonatomic) SVGAImageView *bPlayer;
 @end
 
 @implementation ViewController
@@ -28,6 +29,9 @@ static SVGAParser *parser;
     self.aPlayer.clearsAfterStop = YES;
     parser = [[SVGAParser alloc] init];
     [self onChange:nil];
+    _bPlayer = [[SVGAImageView alloc] init];
+    _bPlayer = [SVGAImageView new];
+    _bPlayer = [[SVGAImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -49,30 +53,63 @@ static SVGAParser *parser;
                        @"https://cdn.jsdelivr.net/gh/svga/SVGA-Samples@master/posche.svga?raw=true",
                        @"https://cdn.jsdelivr.net/gh/svga/SVGA-Samples@master/rose.svga?raw=true",
                        ];
+    NSArray *bundleItem = @[@"audio_biling",
+                            @"Rocket",
+                            @"Goddess",
+                            @"matteRect",
+                            @"matteBitmap",
+                            @"mutiMatte",
+                            @"heartbeat",
+                            @"rose_1.5.0",
+                            @"rose_2.0.0"];
+    
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+//    [self.aPlayer setVideoItemWithURLString:items[arc4random() % items.count]];
+//    [self.aPlayer setVideoItemWithName:bundleItem[arc4random() % bundleItem.count]];
+    [self.aPlayer loadVideoItemWithURLString:items[arc4random() % items.count] completionBlock:^(SVGAVideoEntity * _Nullable videoItem, NSError * _Nullable error) {
+                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        if (videoItem != nil) {
+            self.aPlayer.videoItem = videoItem;
+            NSMutableParagraphStyle *para = [[NSMutableParagraphStyle alloc] init];
+            [para setLineBreakMode:NSLineBreakByTruncatingTail];
+            [para setAlignment:NSTextAlignmentCenter];
+            NSAttributedString *str = [[NSAttributedString alloc]
+                                       initWithString:@"Hello, World! Hello, World!"
+                                       attributes:@{
+                NSFontAttributeName: [UIFont systemFontOfSize:28],
+                NSForegroundColorAttributeName: [UIColor whiteColor],
+                NSParagraphStyleAttributeName: para,
+            }];
+            [self.aPlayer setAttributedText:str forKey:@"banner"];
+            
+            [self.aPlayer startAnimation];
+            
+//            [self.aPlayer startAnimationWithRange:NSMakeRange(10, 25) reverse:YES];
+        }
+    }];
 //    parser.enabledMemoryCache = YES;
-    [parser parseWithURL:[NSURL URLWithString:items[arc4random() % items.count]]
-         completionBlock:^(SVGAVideoEntity * _Nullable videoItem) {
-             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-             if (videoItem != nil) {
-                 self.aPlayer.videoItem = videoItem;
-                 NSMutableParagraphStyle *para = [[NSMutableParagraphStyle alloc] init];
-                 [para setLineBreakMode:NSLineBreakByTruncatingTail];
-                 [para setAlignment:NSTextAlignmentCenter];
-                 NSAttributedString *str = [[NSAttributedString alloc]
-                                            initWithString:@"Hello, World! Hello, World!"
-                                            attributes:@{
-                                                NSFontAttributeName: [UIFont systemFontOfSize:28],
-                                                NSForegroundColorAttributeName: [UIColor whiteColor],
-                                                NSParagraphStyleAttributeName: para,
-                                            }];
-                 [self.aPlayer setAttributedText:str forKey:@"banner"];
-
-                 [self.aPlayer startAnimation];
-                 
-//                 [self.aPlayer startAnimationWithRange:NSMakeRange(10, 25) reverse:YES];
-             }
-         } failureBlock:nil];
+//    [parser parseWithURL:[NSURL URLWithString:items[arc4random() % items.count]]
+//         completionBlock:^(SVGAVideoEntity * _Nullable videoItem) {
+//             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//             if (videoItem != nil) {
+//                 self.aPlayer.videoItem = videoItem;
+//                 NSMutableParagraphStyle *para = [[NSMutableParagraphStyle alloc] init];
+//                 [para setLineBreakMode:NSLineBreakByTruncatingTail];
+//                 [para setAlignment:NSTextAlignmentCenter];
+//                 NSAttributedString *str = [[NSAttributedString alloc]
+//                                            initWithString:@"Hello, World! Hello, World!"
+//                                            attributes:@{
+//                                                NSFontAttributeName: [UIFont systemFontOfSize:28],
+//                                                NSForegroundColorAttributeName: [UIColor whiteColor],
+//                                                NSParagraphStyleAttributeName: para,
+//                                            }];
+//                 [self.aPlayer setAttributedText:str forKey:@"banner"];
+//
+//                 [self.aPlayer startAnimation];
+//
+////                 [self.aPlayer startAnimationWithRange:NSMakeRange(10, 25) reverse:YES];
+//             }
+//         } failureBlock:nil];
 //
 //        [parser parseWithURL:[NSURL URLWithString:@"https://github.com/svga/SVGA-Samples/raw/master_aep/BitmapColorArea1.svga"] completionBlock:^(SVGAVideoEntity * _Nullable videoItem) {
 //            if (videoItem != nil) {

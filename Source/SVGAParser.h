@@ -33,3 +33,15 @@
           failureBlock:(void ( ^ _Nullable)(NSError * _Nonnull error))failureBlock;
 
 @end
+
+@interface SVGAParser(ReadCache)
+
+- (void)parseCacheWithURL:(nonnull NSURL *)URL
+          completionBlock:(void ( ^ _Nonnull )(SVGAVideoEntity * _Nullable videoItem))completionBlock
+             failureBlock:(void ( ^ _Nullable)(NSError * _Nullable error))failureBlock;
+
+- (void)parseCacheWithURLRequest:(nonnull NSURLRequest *)URLRequest
+                 completionBlock:(void ( ^ _Nonnull )(SVGAVideoEntity * _Nullable videoItem))completionBlock
+                    failureBlock:(void ( ^ _Nullable)(NSError * _Nullable error))failureBlock;
+
+@end
