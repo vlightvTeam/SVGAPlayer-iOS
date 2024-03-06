@@ -19,8 +19,6 @@
 {
     self = [super initWithCoder:coder];
     if (self) {
-        _sharedParser = [SVGAParser new];
-        _sharedParser.enabledMemoryCache = YES;
         _autoPlay = YES;
     }
     return self;
@@ -28,15 +26,21 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        _sharedParser = [SVGAParser new];
-        _sharedParser.enabledMemoryCache = YES;
         _autoPlay = YES;
     }
     return self;
 }
 
+- (SVGAParser *)sharedParser {
+    if (_sharedParser == nil) {
+        _sharedParser = [SVGAParser new];
+        _sharedParser.enabledMemoryCache = YES;
+    }
+    return _sharedParser;
+}
+
 - (void)setEnabledMemoryCache:(BOOL)enabledMemoryCache {
-    _sharedParser.enabledMemoryCache = enabledMemoryCache;
+    self.sharedParser.enabledMemoryCache = enabledMemoryCache;
 }
 
 - (void)setImageName:(NSString *)imageName {
@@ -60,7 +64,7 @@
 
 - (void)loadVideoItemWithName:(NSString *)name
               completionBlock:(void (^)(SVGAVideoEntity * _Nullable, NSError * _Nullable))completionBlock{
-    [_sharedParser parseWithNamed:name inBundle:nil completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
+    [self.sharedParser parseWithNamed:name inBundle:nil completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
         completionBlock(videoItem, nil);
     } failureBlock:^(NSError * _Nonnull error) {
         completionBlock(nil, error);
@@ -88,7 +92,7 @@
 
 - (void)loadVideoItemWithURL:(NSURL *)url
              completionBlock:(void (^)(SVGAVideoEntity * _Nullable, NSError * _Nullable))completionBlock {
-    [_sharedParser parseCacheWithURL:url completionBlock:^(SVGAVideoEntity * _Nullable videoItem) {
+    [self.sharedParser parseCacheWithURL:url completionBlock:^(SVGAVideoEntity * _Nullable videoItem) {
         completionBlock(videoItem, nil);
     } failureBlock:^(NSError * _Nullable error) {
         completionBlock(nil, error);
