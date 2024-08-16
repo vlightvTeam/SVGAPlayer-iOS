@@ -88,7 +88,7 @@ static NSOperationQueue *unzipQueue;
         }
         else {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [SVGARequestCacheTool.sharedInstance handleFailureWithKey:[self cacheKey:URLRequest.URL] error:error];;
+                [SVGARequestCacheTool.sharedInstance handleFailureWithKey:[self cacheKey:URLRequest.URL] error:error];
             }];
         }
     }] resume];
@@ -337,6 +337,12 @@ static NSOperationQueue *unzipQueue;
                                     if (completionBlock) {
                                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                                             completionBlock(videoItem);
+                                        }];
+                                    }
+                                } else {
+                                    if (failureBlock) {
+                                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                            failureBlock([NSError errorWithDomain:@"Data Error" code:-2 userInfo:nil]);
                                         }];
                                     }
                                 }
