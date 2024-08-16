@@ -12,7 +12,7 @@
 #import <zlib.h>
 #import <SSZipArchive/SSZipArchive.h>
 #import <CommonCrypto/CommonDigest.h>
-
+#import "SVGARequestCacheTool.h"
 #define ZIP_MAGIC_NUMBER "PK"
 
 @interface SVGAParser ()
@@ -65,29 +65,31 @@ static NSOperationQueue *unzipQueue;
         }];
         return;
     }
+    [self dataTaskWithRequest:URLRequest completionBlock:completionBlock failureBlock:failureBlock];
+}
+
+- (void)dataTaskWithRequest:(NSURLRequest *)URLRequest completionBlock:(void (^)(SVGAVideoEntity * _Nullable))completionBlock failureBlock:(void (^)(NSError * _Nullable))failureBlock {
+    BOOL isContains = [SVGARequestCacheTool.sharedInstance containsAddHandlerWithKey:[self cacheKey:URLRequest.URL] completionBlock:completionBlock failureBlock:failureBlock];
+    if (isContains) {
+        return;
+    }
     [[[NSURLSession sharedSession] dataTaskWithRequest:URLRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error == nil && data != nil) {
             [self parseWithData:data cacheKey:[self cacheKey:URLRequest.URL] completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
-                if (completionBlock) {
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        completionBlock(videoItem);
-                    }];
-                }
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    [SVGARequestCacheTool.sharedInstance handleCompletionWithKey:[self cacheKey:URLRequest.URL] item:videoItem];
+                }];
             } failureBlock:^(NSError * _Nonnull error) {
                 [self clearCache:[self cacheKey:URLRequest.URL]];
-                if (failureBlock) {
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        failureBlock(error);
-                    }];
-                }
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    [SVGARequestCacheTool.sharedInstance handleFailureWithKey:[self cacheKey:URLRequest.URL] error:error];
+                }];
             }];
         }
         else {
-            if (failureBlock) {
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    failureBlock(error);
-                }];
-            }
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [SVGARequestCacheTool.sharedInstance handleFailureWithKey:[self cacheKey:URLRequest.URL] error:error];;
+            }];
         }
     }] resume];
 }
@@ -172,6 +174,12 @@ static NSOperationQueue *unzipQueue;
                             completionBlock(videoItem);
                         }];
                     }
+                } else {
+                    if (failureBlock) {
+                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                            failureBlock([NSError errorWithDomain:@"EXT_SVGAParser" code:-1 userInfo:@{NSLocalizedDescriptionKey: @"转换失败，格式错误."}]);
+                        }];
+                    }
                 }
             }
             else {
@@ -212,6 +220,11 @@ static NSOperationQueue *unzipQueue;
         return;
     }
     if (!data || data.length < 4) {
+        if (failureBlock) {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                failureBlock([NSError errorWithDomain:@"EXT_DataError" code:-1 userInfo:nil]);
+            }];
+        }
         return;
     }
     if (![SVGAParser isZIPData:data]) {
@@ -233,6 +246,12 @@ static NSOperationQueue *unzipQueue;
                 if (completionBlock) {
                     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                         completionBlock(videoItem);
+                    }];
+                }
+            } else {
+                if (failureBlock) {
+                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        failureBlock([NSError errorWithDomain:@"EXT_SVGAParser" code:-1 userInfo:@{NSLocalizedDescriptionKey: @"转换失败，下载的数据有误."}]);
                     }];
                 }
             }
@@ -464,31 +483,7 @@ static NSOperationQueue *unzipQueue;
         }];
         return;
     }
-    [[[NSURLSession sharedSession] dataTaskWithRequest:URLRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (error == nil && data != nil) {
-            [self parseWithData:data cacheKey:[self cacheKey:URLRequest.URL] completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
-                if (completionBlock) {
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        completionBlock(videoItem);
-                    }];
-                }
-            } failureBlock:^(NSError * _Nonnull error) {
-                [self clearCache:[self cacheKey:URLRequest.URL]];
-                if (failureBlock) {
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        failureBlock(error);
-                    }];
-                }
-            }];
-        }
-        else {
-            if (failureBlock) {
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    failureBlock(error);
-                }];
-            }
-        }
-    }] resume];
+    [self dataTaskWithRequest:URLRequest completionBlock:completionBlock failureBlock:failureBlock];
 }
 
 - (void)parseNoReadCacheWithCacheKey:(nonnull NSString *)cacheKey

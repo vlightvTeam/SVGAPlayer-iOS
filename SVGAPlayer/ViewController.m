@@ -10,13 +10,16 @@
 #import "SVGA.h"
 #import "SVGAPlayer+LoadData.h"
 #import "SVGAImageView.h"
+#import "SecondViewController.h"
 @interface ViewController ()<SVGAPlayerDelegate>
 
 @property (weak, nonatomic) IBOutlet SVGAImageView *aPlayer;
 @property (weak, nonatomic) IBOutlet UISlider *aSlider;
 @property (weak, nonatomic) IBOutlet UIButton *onBeginButton;
 
-@property (strong, nonatomic) SVGAImageView *bPlayer;
+@property (strong, nonatomic) SVGAPlayer *bPlayer;
+
+@property (strong, nonatomic) SVGAPlayer *cPlayer;
 @end
 
 @implementation ViewController
@@ -26,18 +29,24 @@ static SVGAParser *parser;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.aPlayer.delegate = self;
-    self.aPlayer.loops = 1;
+//    self.aPlayer.loops = 1;
     self.aPlayer.clearsAfterStop = YES;
     parser = [[SVGAParser alloc] init];
-    [self onChange:nil];
-    _bPlayer = [[SVGAImageView alloc] init];
-    _bPlayer = [SVGAImageView new];
-    _bPlayer = [[SVGAImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+   
+    _bPlayer = [[SVGAPlayer alloc] initWithFrame:CGRectMake(0, 100, 200, 200)];
+    [self.view addSubview:_bPlayer];
+    
+    _cPlayer = [[SVGAPlayer alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_bPlayer.frame), 100, 200, 200)];
+    [self.view addSubview:_cPlayer];
+    
+//    [self onChange:nil];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-    [self onBeginButton:self.onBeginButton];
+//    [self onBeginButton:self.onBeginButton];
+    SecondViewController *vc = SecondViewController.new;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (IBAction)onChange:(id)sender {
@@ -65,8 +74,17 @@ static SVGAParser *parser;
                             @"rose_2.0.0"];
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-//    [self.aPlayer setVideoItemWithURLString:items[arc4random() % items.count]];
-    [self.aPlayer setVideoItemWithName:bundleItem[arc4random() % bundleItem.count]];
+    NSString *urlStr =  items[arc4random() % items.count];
+    [self.bPlayer setVideoItemWithURLString:urlStr];
+
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.cPlayer setVideoItemWithURLString:urlStr];
+//    });
+    
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.aPlayer setVideoItemWithURLString:urlStr];
+//        });
+
 //    [self.aPlayer loadVideoItemWithURLString:items[arc4random() % items.count] completionBlock:^(SVGAVideoEntity * _Nullable videoItem, NSError * _Nullable error) {
 //                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 //        if (videoItem != nil) {
@@ -84,6 +102,9 @@ static SVGAParser *parser;
 //            [self.aPlayer setAttributedText:str forKey:@"banner"];
 //
 //            [self.aPlayer startAnimation];
+//            
+//            self.bPlayer.videoItem = videoItem;
+//            [self.bPlayer startAnimation];
 //
 ////            [self.aPlayer startAnimationWithRange:NSMakeRange(10, 25) reverse:YES];
 //        }

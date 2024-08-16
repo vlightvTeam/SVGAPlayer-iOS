@@ -11,6 +11,9 @@
 		63712E6821787A45001AE014 /* SVGAAudioEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 63712E6721787A45001AE014 /* SVGAAudioEntity.m */; };
 		63E817012178809D001D2D62 /* SVGAAudioLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E817002178809D001D2D62 /* SVGAAudioLayer.m */; };
 		6B42488E2B95BF1400138B06 /* SVGAPlayer+LoadData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B42488D2B95BF1400138B06 /* SVGAPlayer+LoadData.m */; };
+		6BA4E03C2C34FE5300CB3782 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA4E03B2C34FE5300CB3782 /* SecondViewController.m */; };
+		6BBBF81E2C33F86800F423AA /* SVGARequestCacheTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBBF81D2C33F86800F423AA /* SVGARequestCacheTool.m */; };
+		6BBBF8212C34068100F423AA /* SVGASyncMutableDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBBF81F2C34068100F423AA /* SVGASyncMutableDictionary.m */; };
 		71418C93225E6F710029C69E /* mutiMatte.svga in Resources */ = {isa = PBXBuildFile; fileRef = 71418C92225E6F710029C69E /* mutiMatte.svga */; };
 		718A146D235718E000FED5D3 /* Rocket.svga in Resources */ = {isa = PBXBuildFile; fileRef = 718A146C235718E000FED5D3 /* Rocket.svga */; };
 		71A8679122B7785100176CD6 /* matteRect.svga in Resources */ = {isa = PBXBuildFile; fileRef = 71A8679022B7785100176CD6 /* matteRect.svga */; };
@@ -52,6 +55,12 @@
 		63E817002178809D001D2D62 /* SVGAAudioLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SVGAAudioLayer.m; sourceTree = "<group>"; };
 		6B42488C2B95BF1400138B06 /* SVGAPlayer+LoadData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SVGAPlayer+LoadData.h"; sourceTree = "<group>"; };
 		6B42488D2B95BF1400138B06 /* SVGAPlayer+LoadData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SVGAPlayer+LoadData.m"; sourceTree = "<group>"; };
+		6BA4E03A2C34FE5300CB3782 /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
+		6BA4E03B2C34FE5300CB3782 /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
+		6BBBF81C2C33F86800F423AA /* SVGARequestCacheTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SVGARequestCacheTool.h; sourceTree = "<group>"; };
+		6BBBF81D2C33F86800F423AA /* SVGARequestCacheTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SVGARequestCacheTool.m; sourceTree = "<group>"; };
+		6BBBF81F2C34068100F423AA /* SVGASyncMutableDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVGASyncMutableDictionary.m; sourceTree = "<group>"; };
+		6BBBF8202C34068100F423AA /* SVGASyncMutableDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVGASyncMutableDictionary.h; sourceTree = "<group>"; };
 		71418C92225E6F710029C69E /* mutiMatte.svga */ = {isa = PBXFileReference; lastKnownFileType = file; path = mutiMatte.svga; sourceTree = "<group>"; };
 		718A146C235718E000FED5D3 /* Rocket.svga */ = {isa = PBXFileReference; lastKnownFileType = file; path = Rocket.svga; sourceTree = "<group>"; };
 		71A8679022B7785100176CD6 /* matteRect.svga */ = {isa = PBXFileReference; lastKnownFileType = file; path = matteRect.svga; sourceTree = "<group>"; };
@@ -124,6 +133,17 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		6BBBF81B2C33F83F00F423AA /* RequestCacheTool */ = {
+			isa = PBXGroup;
+			children = (
+				6BBBF8202C34068100F423AA /* SVGASyncMutableDictionary.h */,
+				6BBBF81F2C34068100F423AA /* SVGASyncMutableDictionary.m */,
+				6BBBF81C2C33F86800F423AA /* SVGARequestCacheTool.h */,
+				6BBBF81D2C33F86800F423AA /* SVGARequestCacheTool.m */,
+			);
+			path = RequestCacheTool;
+			sourceTree = "<group>";
+		};
 		90A676D41D13A6DF008A69F3 = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +171,8 @@
 				90A676E41D13A6DF008A69F3 /* AppDelegate.m */,
 				90A676E61D13A6DF008A69F3 /* ViewController.h */,
 				90A676E71D13A6DF008A69F3 /* ViewController.m */,
+				6BA4E03A2C34FE5300CB3782 /* SecondViewController.h */,
+				6BA4E03B2C34FE5300CB3782 /* SecondViewController.m */,
 				90DB59B31F96026E00894727 /* SVGAImageView.h */,
 				90DB59B41F96026E00894727 /* SVGAImageView.m */,
 				6B42488C2B95BF1400138B06 /* SVGAPlayer+LoadData.h */,
@@ -177,6 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				90D7CA081F7E2D4D006E74F0 /* pbobjc */,
+				6BBBF81B2C33F83F00F423AA /* RequestCacheTool */,
 				90A676F81D13A81F008A69F3 /* SVGA.h */,
 				90A676F91D13A81F008A69F3 /* SVGA.m */,
 				90A676FB1D13A82A008A69F3 /* SVGAParser.h */,
@@ -348,10 +371,12 @@
 				90A676E81D13A6DF008A69F3 /* ViewController.m in Sources */,
 				9052FC631E6EB8D4007BC925 /* SVGAExporter.m in Sources */,
 				90A677031D13AE19008A69F3 /* SVGAVideoEntity.m in Sources */,
+				6BBBF8212C34068100F423AA /* SVGASyncMutableDictionary.m in Sources */,
 				90A364DA1E5AED04009347F1 /* SVGAVideoSpriteFrameEntity.m in Sources */,
 				63712E6821787A45001AE014 /* SVGAAudioEntity.m in Sources */,
 				63E817012178809D001D2D62 /* SVGAAudioLayer.m in Sources */,
 				90A364D11E5AEC11009347F1 /* SVGABitmapLayer.m in Sources */,
+				6BA4E03C2C34FE5300CB3782 /* SecondViewController.m in Sources */,
 				6B42488E2B95BF1400138B06 /* SVGAPlayer+LoadData.m in Sources */,
 				904D41F81D223DD20085A21A /* SVGABezierPath.m in Sources */,
 				90A364D71E5AECBD009347F1 /* SVGAVideoSpriteEntity.m in Sources */,
@@ -362,6 +387,7 @@
 				90A677061D13BF77008A69F3 /* SVGAPlayer.m in Sources */,
 				90A364D41E5AEC1C009347F1 /* SVGAVectorLayer.m in Sources */,
 				90D7CA161F7FA07A006E74F0 /* Svga.pbobjc.m in Sources */,
+				6BBBF81E2C33F86800F423AA /* SVGARequestCacheTool.m in Sources */,
 				90A676E21D13A6DF008A69F3 /* main.m in Sources */,
 				90A676FD1D13A82A008A69F3 /* SVGAParser.m in Sources */,
 			);
