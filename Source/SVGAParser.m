@@ -221,6 +221,12 @@ static NSOperationQueue *unzipQueue;
             NSError *err;
             SVGAProtoMovieEntity *protoObject = [SVGAProtoMovieEntity parseFromData:inflateData error:&err];
             if (!err && [protoObject isKindOfClass:[SVGAProtoMovieEntity class]]) {
+                NSString *cacheDir = [self cacheDirectory:cacheKey];
+                if (![[NSFileManager defaultManager] fileExistsAtPath:[cacheDir stringByAppendingString:@"/movie.binary"]]) {
+                    if ([[NSFileManager defaultManager] createDirectoryAtPath:cacheDir attributes:nil]) {
+                        [inflateData writeToFile:[cacheDir stringByAppendingString:@"/movie.binary"] atomically:YES];
+                    }
+                }
                 SVGAVideoEntity *videoItem = [[SVGAVideoEntity alloc] initWithProtoObject:protoObject cacheDir:@""];
                 [videoItem resetImagesWithProtoObject:protoObject];
                 [videoItem resetSpritesWithProtoObject:protoObject];
